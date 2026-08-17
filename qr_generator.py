@@ -2,15 +2,20 @@ from pathlib import Path
 from io import BytesIO
 import qrcode
 
-def generate_qr(data, file_name):
 
-    path = Path(__file__).parent /"Your QR Codes"
+def generate_qr(data, file_name):
+    path = Path("/tmp/Your QR Codes")
     path.mkdir(parents=True, exist_ok=True)
+
     qr = qrcode.QRCode()
     qr.add_data(data)
+    qr.make(fit=True)
+
     img_path = path / file_name
     img = qr.make_image()
     img.save(img_path)
+
+    return img_path
 
 
 def generate_qr_bytes(data):
@@ -21,10 +26,11 @@ def generate_qr_bytes(data):
     )
     qr.add_data(data)
     qr.make(fit=True)
+
     img = qr.make_image(fill_color="black", back_color="white")
+
     buffer = BytesIO()
     img.save(buffer, format="PNG")
     buffer.seek(0)
-    return buffer.getvalue()
 
-    
+    return buffer.getvalue()
